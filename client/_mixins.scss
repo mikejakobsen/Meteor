@@ -1,0 +1,159 @@
+//
+// REM sizing
+///////////////////////////////////
+@mixin font-size($sizeValue: 1.6, $line: $sizeValue * 1.5){
+  font-size: ($sizeValue * 1) + px;
+  line-height: ($line * 1) + px;
+  font-size: ($sizeValue / 10) + rem;
+  line-height: ($line / 10) + rem;
+}
+
+// Turns off the element-invisible effect.
+@mixin element-invisible-off {
+  clip: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  position: static !important;
+  width: auto;
+}
+
+// Hide element visually, but have it available for screenreaders
+// and make it focusable
+@mixin element-invisible-focusable {
+  @include element-invisible;
+  &:active,
+  &:focus { // Allow the element to be focusable when navigated to via the keyboard: h5bp.com/p
+    @include element-invisible-off;
+  }
+}
+
+// Clearfix to contain floats: h5bp.com/q
+@mixin my-clearfix {
+  &:before { // prevent top margin colapse
+    content: "";
+    display: table;
+  }
+  @include pie-clearfix;
+}
+
+// Float element left with margins
+@mixin my-float-left {
+  @include float-left;
+  margin: 0 10px 5px 0;
+}
+
+// Float element right with margins
+@mixin my-float-right {
+  @include float-right;
+  margin: 0 0 5px 10px;
+}
+
+
+// bemify
+// https://gtihub.com/franzheidl/bemify
+// Franz Heidl 2015
+// MIT License
+
+// Trying to learn the bem syntax
+// https://github.com/franzheidl/bemify
+
+
+
+// CONFIG
+// ======
+
+// You can change the configuration here. To use your own config/variables file, just import your variables before using one of the mixins.
+
+// Output combined state selectors like:
+//    .block__element.is-active {}
+// Set to false to output single, non-combined state modifiers:
+//    .block__element--is-active {}
+$combined-state-selectors: true !default;
+
+// .block[separator]element:
+$element-separator:        "__" !default;
+
+// .block[separator]modifier:
+$modifier-separator:       "--" !default;
+
+// The default prefix for state modifier selectors, will be combined with $modifier-separator:
+$state-prefix:             "is" !default;
+
+
+
+
+// MIXINS
+// ======
+
+@mixin block($name) {
+  .#{$name} {
+    @content;
+  }
+}
+
+
+@mixin element($name) {
+  @at-root {
+    &#{$element-separator}#{$name} {
+      @content;
+    }
+  }
+}
+
+
+@mixin modifier($name) {
+  @at-root {
+    &#{$modifier-separator}#{$name} {
+      @content;
+    }
+  }
+}
+
+
+@mixin state($state, $prefix: $state-prefix) {
+  @if $combined-state-selectors == true {
+    @at-root {
+      &.#{$prefix}-#{$state} {
+        @content;
+      }
+    }
+  }
+  @else {
+    @at-root {
+      &#{$modifier-separator}#{$prefix}-#{$state} {
+        @content;
+      }
+    }
+  }
+}
+
+
+
+
+// ALIASES
+// =======
+
+@mixin component($name) {
+  @include block($name) {
+    @content;
+  }
+}
+
+@mixin child($name) {
+  @include element($name) {
+    @content;
+  }
+}
+
+@mixin subcomponent($name) {
+  @include element($name) {
+    @content;
+  }
+}
+
+@mixin sub($name) {
+  @include element($name) {
+    @content;
+  }
+}
